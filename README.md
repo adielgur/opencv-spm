@@ -1,12 +1,17 @@
-# OpenCV-SPM
+# OpenCV-SPM (+Contrib)
 
 Use [OpenCV](https://github.com/opencv/opencv) in your Swift project in a more elegant way.
 
 This Swift package simplifies the process of importing the prebuilt `opencv2.xcframework` into your project, eliminating the need for manual building. It monitors release events in the [OpenCV Github Project](https://github.com/opencv/opencv) and automatically generates new releases using [Github Actions](https://github.com/features/actions).
 
+## Known issues -
+
+The build github action generates a nested zip for some reason, so that hasn't been fixed yet.
+The release of 4.10.0+contrib was done manually.
+
 ## Installation
 
-Add `https://github.com/yeatse/opencv-spm.git` to your package dependencies
+Add `https://github.com/adielgur/opencv-spm.git` to your package dependencies
 
 ![add dependency](screenshots/add%20dependency.png)
 
