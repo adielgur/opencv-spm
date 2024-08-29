@@ -6,6 +6,7 @@ on:
       build_run_id:
         description: "The ID of the workflow run from which to download the artifact"
         required: true
+        default: "10613555662"
         type: string
 
 jobs:
@@ -17,14 +18,21 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Download artifact
+      - name: Get Artifact Info
+        id: get_artifact_info
         run: |
-          curl -L -o artifact.zip \
+          ARTIFACT_URL=$(curl -s \
           -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.event.inputs.build_run_id }}/artifacts
+          https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.event.inputs.build_run_id }}/artifacts \
+          | jq -r '.artifacts[] | select(.name == "opencv2.xcframework.zip") | .archive_download_url')
+          echo "ARTIFACT_URL=${ARTIFACT_URL}" >> $GITHUB_ENV
 
-          unzip artifact.zip -d ./artifact
+      - name: Download Artifact
+        run: |
+          curl -L -o opencv2.xcframework.zip \
+          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          ${{ env.ARTIFACT_URL }}
 
       - name: Get version
         id: get_version
@@ -39,7 +47,7 @@ jobs:
       - name: Update Package.swift
         run: |
           sed -i "s/let version = \".*\"/let version = \"${{ steps.get_version.outputs.VERSION }}\"/" Package.swift
-          sed -i "s/let checksum = \".*\"/let checksum = \"$(shasum -a 256 ./artifact/opencv2.xcframework.zip | cut -d ' ' -f 1)\"/" Package.swift
+          sed -i "s/let checksum = \".*\"/let checksum = \"$(shasum -a 256 opencv2.xcframework.zip | cut -d ' ' -f 1)\"/" Package.swift
 
       - name: Commit and push
         run: |
@@ -53,5 +61,5 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ./artifact/opencv2.xcframework.zip
+          files: opencv2.xcframework.zip
           tag_name: ${{ steps.get_version.outputs.VERSION }}
