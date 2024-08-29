@@ -1,4 +1,4 @@
-# OpenCV-SPM (+Contrib)
+# OpenCV-SPM (+[Contrib](https://github.com/opencv/opencv_contrib))
 
 Use [OpenCV](https://github.com/opencv/opencv) in your Swift project in a more elegant way.
 
