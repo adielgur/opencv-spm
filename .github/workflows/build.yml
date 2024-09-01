@@ -21,7 +21,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          path: opencv-spm
+          path: opencv-spm-with-contrib
 
       - uses: actions/setup-python@v5
         with:
@@ -29,7 +29,7 @@ jobs:
 
       - name: Get version
         id: get_version
-        working-directory: opencv-spm
+        working-directory: opencv-spm-with-contrib
         run: echo "VERSION=$(cat .version)" >> $GITHUB_OUTPUT
 
       - name: Checkout OpenCV
@@ -52,7 +52,7 @@ jobs:
           IPHONEOS_DEPLOYMENT_TARGET: 12.0
           MACOSX_DEPLOYMENT_TARGET: 10.13
         run: |
-          git apply $GITHUB_WORKSPACE/opencv-spm/patches/*.patch
+          git apply $GITHUB_WORKSPACE/opencv-spm-with-contrib/patches/*.patch
           pip3 install pathlib
           python3 platforms/apple/build_xcframework.py \
               --iphoneos_archs=arm64 \

@@ -11,7 +11,7 @@ The release of 4.10.0+contrib was done manually.
 
 ## Installation
 
-Add `https://github.com/adielgur/opencv-spm.git` to your package dependencies
+Add `https://github.com/adielgur/opencv-spm-with-contrib.git` to your package dependencies
 
 ![add dependency](screenshots/add%20dependency.png)
 
